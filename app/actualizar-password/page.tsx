@@ -57,8 +57,12 @@ export default function ActualizarPasswordPage() {
 
       <div className="relative w-full max-w-sm">
         <div className="mb-8 rounded-xl border border-white/10 bg-espresso-950/60 px-6 py-5 text-center backdrop-blur-sm">
-          <p className="font-serif italic text-3xl leading-tight text-white">La Mazaroca</p>
-          <p className="mt-1 text-sm uppercase tracking-wider text-white/60">Panel de reservas</p>
+          <img
+            src="/img/logomazaroca1.jpg"
+            alt="Bodega La Mazaroca"
+            className="mx-auto h-16 w-auto rounded-md"
+          />
+          <p className="mt-3 text-sm uppercase tracking-wider text-white/60">Panel de reservas</p>
         </div>
 
         <div className="rounded-xl border border-line bg-surface p-6 shadow-popover">
@@ -101,7 +105,7 @@ export default function ActualizarPasswordPage() {
               <button
                 type="submit"
                 disabled={cargando}
-                className="w-full rounded-lg bg-espresso-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-espresso-900/90 disabled:opacity-60"
+                className="w-full rounded-lg bg-brand px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
               >
                 {cargando ? "Guardando..." : "Guardar contraseña"}
               </button>

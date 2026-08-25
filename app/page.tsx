@@ -82,8 +82,12 @@ export default function LoginPage() {
       <div className="relative w-full max-w-sm">
         <div className="overflow-hidden rounded-xl border border-line bg-surface shadow-popover">
           <div className="border-b border-line px-6 pb-5 pt-7 text-center">
-            <p className="font-serif italic text-3xl leading-tight text-ink">La Mazaroca</p>
-            <p className="mt-1 text-sm uppercase tracking-wider text-ink/50">Panel de reservas</p>
+            <img
+              src="/img/logomazaroca1.jpg"
+              alt="Bodega La Mazaroca"
+              className="mx-auto h-16 w-auto rounded-md"
+            />
+            <p className="mt-3 text-sm uppercase tracking-wider text-ink/50">Panel de reservas</p>
           </div>
 
           <div className="p-6">
@@ -144,7 +148,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={cargando}
-                  className="w-full rounded-lg bg-espresso-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-espresso-900/90 disabled:opacity-60"
+                  className="w-full rounded-lg bg-brand px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
                 >
                   {cargando ? "Entrando..." : "Entrar"}
                 </button>
@@ -190,7 +194,7 @@ export default function LoginPage() {
                     <button
                       type="submit"
                       disabled={cargando}
-                      className="w-full rounded-lg bg-espresso-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-espresso-900/90 disabled:opacity-60"
+                      className="w-full rounded-lg bg-brand px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
                     >
                       {cargando ? "Enviando..." : "Enviar enlace"}
                     </button>
