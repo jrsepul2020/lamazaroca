@@ -56,16 +56,13 @@ export default function ActualizarPasswordPage() {
       <div className="absolute inset-0 bg-espresso-950/80" />
 
       <div className="relative w-full max-w-sm">
-        <div className="mb-8 rounded-xl border border-white/10 bg-espresso-950/60 px-6 py-5 text-center backdrop-blur-sm">
-          <img
-            src="/img/logomazaroca1.jpg"
-            alt="Bodega La Mazaroca"
-            className="mx-auto h-16 w-auto rounded-md"
-          />
-          <p className="mt-3 text-sm uppercase tracking-wider text-white/60">Panel de reservas</p>
-        </div>
+        <div className="overflow-hidden rounded-xl border border-line bg-surface shadow-popover">
+          <div className="bg-brand text-center">
+            <img src="/img/logomazaroca1.jpg" alt="Bodega La Mazaroca" className="block w-full h-auto" />
+            <p className="px-6 pb-5 pt-3 text-sm uppercase tracking-wider text-white/70">Panel de reservas</p>
+          </div>
 
-        <div className="rounded-xl border border-line bg-surface p-6 shadow-popover">
+          <div className="p-6">
           {!listoParaActualizar ? (
             <p className="text-sm text-ink/70">
               Abre el enlace que te hemos enviado por email para poder establecer una contraseña nueva.
@@ -111,6 +108,7 @@ export default function ActualizarPasswordPage() {
               </button>
             </form>
           )}
+          </div>
         </div>
       </div>
     </div>

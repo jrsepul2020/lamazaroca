@@ -81,13 +81,9 @@ export default function LoginPage() {
 
       <div className="relative w-full max-w-sm">
         <div className="overflow-hidden rounded-xl border border-line bg-surface shadow-popover">
-          <div className="border-b border-line px-6 pb-5 pt-7 text-center">
-            <img
-              src="/img/logomazaroca1.jpg"
-              alt="Bodega La Mazaroca"
-              className="mx-auto h-16 w-auto rounded-md"
-            />
-            <p className="mt-3 text-sm uppercase tracking-wider text-ink/50">Panel de reservas</p>
+          <div className="bg-brand text-center">
+            <img src="/img/logomazaroca1.jpg" alt="Bodega La Mazaroca" className="block w-full h-auto" />
+            <p className="px-6 pb-5 pt-3 text-sm uppercase tracking-wider text-white/70">Panel de reservas</p>
           </div>
 
           <div className="p-6">
