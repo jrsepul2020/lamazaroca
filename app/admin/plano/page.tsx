@@ -152,7 +152,7 @@ export default function PlanoPage() {
           {esHoy ? (
             <>
               <span className="inline-flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-brand" /> Ocupada ahora
+                <span className="h-2.5 w-2.5 rounded-full bg-brand-dark" /> Ocupada ahora
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <span className="h-2.5 w-2.5 rounded-full border border-brand bg-brand-tint" /> Reservada más tarde hoy
@@ -227,7 +227,7 @@ function CajaMesa({
     <div
       className={`rounded-lg border p-2.5 ${
         activa
-          ? "border-brand bg-brand text-white"
+          ? "border-brand-dark bg-brand-dark text-white"
           : proxima
             ? "border-brand/40 bg-brand-tint text-ink"
             : "border-line-strong bg-surface-sunken text-ink-muted"

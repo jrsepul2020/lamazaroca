@@ -1,9 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { CalendarCheck, LayoutGrid, Clock, CalendarRange, Map, Rows3, Menu, X, LogOut } from "lucide-react";
+import {
+  CalendarCheck,
+  LayoutGrid,
+  Clock,
+  CalendarRange,
+  Map,
+  Rows3,
+  Menu,
+  X,
+  LogOut,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { crearClienteNavegador } from "@/lib/supabase/client";
 
 const NAV = [
@@ -15,12 +27,22 @@ const NAV = [
   { href: "/admin/temporadas", label: "Temporadas", icon: CalendarRange },
 ];
 
+const CLAVE_COLAPSADA = "mazaroca_sidebar_colapsada";
+
 function esActivo(pathname: string, href: string) {
   if (href === "/admin") return pathname === "/admin";
   return pathname.startsWith(href);
 }
 
-function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
+function SidebarContent({
+  pathname,
+  onNavigate,
+  colapsada = false,
+}: {
+  pathname: string;
+  onNavigate?: () => void;
+  colapsada?: boolean;
+}) {
   const router = useRouter();
   const [saliendo, setSaliendo] = useState(false);
 
@@ -34,9 +56,15 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
 
   return (
     <div className="flex h-full flex-col">
-      <div className="px-6 py-7">
-        <p className="font-serif italic text-xl leading-tight text-white">La Mazaroca</p>
-        <p className="mt-0.5 text-xs uppercase tracking-wider text-white/45">Panel de reservas</p>
+      <div className={`py-7 ${colapsada ? "px-3 text-center" : "px-6"}`}>
+        {colapsada ? (
+          <p className="font-serif italic text-xl leading-tight text-white">M</p>
+        ) : (
+          <>
+            <p className="font-serif italic text-xl leading-tight text-white">La Mazaroca</p>
+            <p className="mt-0.5 text-xs uppercase tracking-wider text-white/45">Panel de reservas</p>
+          </>
+        )}
       </div>
 
       <nav className="flex-1 space-y-1 px-3">
@@ -47,16 +75,15 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
               key={href}
               href={href}
               onClick={onNavigate}
+              title={colapsada ? label : undefined}
               aria-current={activo ? "page" : undefined}
               className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[0.925rem] transition-colors ${
-                activo
-                  ? "bg-white/10 text-white font-medium"
-                  : "text-white/60 hover:bg-white/5 hover:text-white/90"
-              }`}
+                colapsada ? "justify-center" : ""
+              } ${activo ? "bg-white/10 text-white font-medium" : "text-white/60 hover:bg-white/5 hover:text-white/90"}`}
             >
               <Icon size={18} strokeWidth={1.75} className="shrink-0" />
-              {label}
-              {beta && (
+              {!colapsada && label}
+              {!colapsada && beta && (
                 <span className="rounded-full bg-white/15 px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide text-white/80">
                   Beta
                 </span>
@@ -71,15 +98,20 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
           type="button"
           onClick={handleLogout}
           disabled={saliendo}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[0.925rem] text-white/60 transition-colors hover:bg-white/5 hover:text-white/90 disabled:opacity-60"
+          title={colapsada ? "Cerrar sesión" : undefined}
+          className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[0.925rem] text-white/60 transition-colors hover:bg-white/5 hover:text-white/90 disabled:opacity-60 ${
+            colapsada ? "justify-center" : ""
+          }`}
         >
           <LogOut size={18} strokeWidth={1.75} className="shrink-0" />
-          {saliendo ? "Saliendo..." : "Cerrar sesión"}
+          {!colapsada && (saliendo ? "Saliendo..." : "Cerrar sesión")}
         </button>
       </div>
-      <div className="border-t border-white/10 px-6 py-4">
-        <p className="text-xs text-white/40">Bodega La Mazaroca &copy; {new Date().getFullYear()}</p>
-      </div>
+      {!colapsada && (
+        <div className="border-t border-white/10 px-6 py-4">
+          <p className="text-xs text-white/40">Bodega La Mazaroca &copy; {new Date().getFullYear()}</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -87,12 +119,37 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [colapsada, setColapsada] = useState(false);
+
+  useEffect(() => {
+    setColapsada(localStorage.getItem(CLAVE_COLAPSADA) === "1");
+  }, []);
+
+  function alternarColapso() {
+    setColapsada((prev) => {
+      const siguiente = !prev;
+      localStorage.setItem(CLAVE_COLAPSADA, siguiente ? "1" : "0");
+      return siguiente;
+    });
+  }
 
   return (
     <div className="min-h-screen bg-surface-warm">
       {/* Sidebar de escritorio */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 bg-espresso-900 md:block">
-        <SidebarContent pathname={pathname} />
+      <aside
+        className={`fixed inset-y-0 left-0 z-30 hidden bg-brand-dark transition-[width] duration-200 md:block ${
+          colapsada ? "w-20" : "w-64"
+        }`}
+      >
+        <SidebarContent pathname={pathname} colapsada={colapsada} />
+        <button
+          type="button"
+          onClick={alternarColapso}
+          aria-label={colapsada ? "Expandir menú" : "Colapsar menú"}
+          className="absolute -right-3 top-9 flex h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-brand-dark text-white/70 shadow-card transition-colors hover:bg-white/10 hover:text-white"
+        >
+          {colapsada ? <ChevronRight size={14} strokeWidth={2} /> : <ChevronLeft size={14} strokeWidth={2} />}
+        </button>
       </aside>
 
       {/* Barra superior + drawer en móvil */}
@@ -115,7 +172,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             onClick={() => setMenuAbierto(false)}
             aria-hidden="true"
           />
-          <div className="absolute inset-y-0 left-0 w-72 bg-espresso-900 shadow-popover">
+          <div className="absolute inset-y-0 left-0 w-72 bg-brand-dark shadow-popover">
             <div className="flex justify-end px-3 pt-3">
               <button
                 type="button"
@@ -131,7 +188,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       )}
 
-      <main className="md:pl-64">
+      <main className={`transition-[padding] duration-200 ${colapsada ? "md:pl-20" : "md:pl-64"}`}>
         <div
           className={
             pathname === "/admin/plano" || pathname === "/admin/beta"
