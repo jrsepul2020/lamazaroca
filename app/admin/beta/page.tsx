@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import {
   ChevronLeft,
   ChevronRight,
+  ArrowLeft,
   Users,
   X,
   Mail,
@@ -645,32 +646,59 @@ function PanelDetalle({
       ref={panelRef}
       className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto border-l border-line bg-surface shadow-popover sm:w-[420px]"
     >
-        <div className="flex items-start justify-between p-5 pb-0">
-          <div className="flex h-14 w-14 flex-col items-center justify-center rounded-full bg-brand text-white">
-            <span className="text-[0.6rem] uppercase leading-none tracking-wide opacity-80">{mesaPrefijo || "Mesa"}</span>
-            <span className="text-lg font-bold leading-tight">{mesaNumero}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            {!editando && (
-              <button
-                onClick={() => setEditando(true)}
-                aria-label="Editar reserva"
-                className="rounded-md p-1.5 text-ink-muted transition-colors hover:bg-surface-sunken hover:text-ink"
-              >
-                <Pencil size={18} strokeWidth={1.75} />
-              </button>
-            )}
+        {/* Barra superior: en móvil, flecha atrás grande (patrón habitual de navegación móvil); en escritorio, cruz de cerrar */}
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-surface/95 px-2 py-2 backdrop-blur-sm sm:hidden">
+          <button
+            onClick={onCerrar}
+            aria-label="Volver"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface-sunken active:bg-surface-sunken"
+          >
+            <ArrowLeft size={22} strokeWidth={2} />
+          </button>
+          {!editando && (
             <button
-              onClick={onCerrar}
-              aria-label="Cerrar"
-              className="rounded-md p-1.5 text-ink-muted transition-colors hover:bg-surface-sunken hover:text-ink"
+              onClick={() => setEditando(true)}
+              aria-label="Editar reserva"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-surface-sunken"
             >
-              <X size={20} strokeWidth={1.75} />
+              <Pencil size={18} strokeWidth={1.75} />
             </button>
-          </div>
+          )}
         </div>
 
-        <div className="px-5 pt-3">
+        <div className="hidden items-center justify-end gap-1 p-3 sm:flex">
+          {!editando && (
+            <button
+              onClick={() => setEditando(true)}
+              aria-label="Editar reserva"
+              className="rounded-md p-1.5 text-ink-muted transition-colors hover:bg-surface-sunken hover:text-ink"
+            >
+              <Pencil size={18} strokeWidth={1.75} />
+            </button>
+          )}
+          <button
+            onClick={onCerrar}
+            aria-label="Cerrar"
+            className="rounded-md p-1.5 text-ink-muted transition-colors hover:bg-surface-sunken hover:text-ink"
+          >
+            <X size={20} strokeWidth={1.75} />
+          </button>
+        </div>
+
+        <div className="bg-brand px-5 py-4 text-white">
+          <p className="text-xs uppercase tracking-wide opacity-80">{mesaPrefijo || "Mesa"}</p>
+          <p className="text-4xl font-bold leading-none">{mesaNumero}</p>
+        </div>
+
+        <div className={`flex items-center justify-between px-5 py-4 text-white ${DOT_ESTADO[r.estado] || "bg-ink-faint"}`}>
+          <span className="text-lg font-bold">{ETIQUETAS_ESTADO[r.estado] || r.estado}</span>
+          {(() => {
+            const Icono = ICONO_ESTADO[r.estado];
+            return Icono ? <Icono size={26} strokeWidth={2} /> : null;
+          })()}
+        </div>
+
+        <div className="px-5 pt-4">
           {editando ? (
             <div className="space-y-2.5">
               <label className="block text-xs font-medium text-ink-muted">
