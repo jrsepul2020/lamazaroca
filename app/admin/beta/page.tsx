@@ -646,22 +646,23 @@ function PanelDetalle({
       ref={panelRef}
       className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto border-l border-line bg-surface shadow-popover sm:w-[420px]"
     >
-        {/* Barra superior: en móvil, flecha atrás grande (patrón habitual de navegación móvil); en escritorio, cruz de cerrar */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-surface/95 px-2 py-2 backdrop-blur-sm sm:hidden">
+        {/* Barra superior: en móvil, flecha atrás grande + texto (patrón habitual de navegación móvil); en escritorio, cruz de cerrar */}
+        <div className="sticky top-0 z-10 flex items-center justify-between bg-espresso-950 px-2 py-2 sm:hidden">
           <button
             onClick={onCerrar}
             aria-label="Volver"
-            className="flex h-11 w-11 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface-sunken active:bg-surface-sunken"
+            className="flex items-center gap-2 rounded-full px-3 py-2 text-white transition-colors hover:bg-white/10 active:bg-white/10"
           >
-            <ArrowLeft size={22} strokeWidth={2} />
+            <ArrowLeft size={32} strokeWidth={2.25} />
+            <span className="text-lg font-semibold">Volver</span>
           </button>
           {!editando && (
             <button
               onClick={() => setEditando(true)}
               aria-label="Editar reserva"
-              className="flex h-11 w-11 items-center justify-center rounded-full text-ink-muted transition-colors hover:bg-surface-sunken"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10"
             >
-              <Pencil size={18} strokeWidth={1.75} />
+              <Pencil size={20} strokeWidth={1.75} />
             </button>
           )}
         </div>
@@ -685,9 +686,10 @@ function PanelDetalle({
           </button>
         </div>
 
-        <div className="bg-brand px-5 py-4 text-white">
-          <p className="text-xs uppercase tracking-wide opacity-80">{mesaPrefijo || "Mesa"}</p>
-          <p className="text-4xl font-bold leading-none">{mesaNumero}</p>
+        <div className="bg-brand px-5 py-5 text-white">
+          <p className="text-3xl font-extrabold uppercase leading-none tracking-wide sm:text-4xl">
+            {mesaPrefijo || "Mesa"} {mesaNumero}
+          </p>
         </div>
 
         <div className={`flex items-center justify-between px-5 py-4 text-white ${DOT_ESTADO[r.estado] || "bg-ink-faint"}`}>
@@ -757,26 +759,25 @@ function PanelDetalle({
           ) : (
             <>
               <h2 className="text-xl font-semibold text-ink">{r.clientes?.nombre}</h2>
-              <div className="mt-1 flex flex-col gap-1 text-sm text-ink-muted">
-                <a href={`tel:${r.clientes?.telefono}`} className="inline-flex items-center gap-1.5 hover:text-brand hover:underline">
-                  <Phone size={13} strokeWidth={1.75} />
+              <div className="mt-1.5 flex flex-col gap-1.5 text-base text-ink-muted">
+                <a href={`tel:${r.clientes?.telefono}`} className="inline-flex items-center gap-2 hover:text-brand hover:underline">
+                  <Phone size={16} strokeWidth={1.75} />
                   {r.clientes?.telefono}
                 </a>
-                <a href={`mailto:${r.clientes?.email}`} className="inline-flex items-center gap-1.5 hover:text-brand hover:underline">
-                  <Mail size={13} strokeWidth={1.75} />
+                <a href={`mailto:${r.clientes?.email}`} className="inline-flex items-center gap-2 hover:text-brand hover:underline">
+                  <Mail size={16} strokeWidth={1.75} />
                   {r.clientes?.email}
                 </a>
               </div>
-              <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-ink-muted">
-                <span className={`h-2 w-2 rounded-full ${DOT_ESTADO[r.estado] || "bg-ink-faint"}`} />
+              <div className="mt-3 flex flex-wrap items-center gap-4 text-lg font-bold text-brand">
                 {r.mesas?.zona && (
-                  <span className="inline-flex items-center gap-1">
-                    <MapPin size={13} strokeWidth={1.75} />
+                  <span className="inline-flex items-center gap-1.5">
+                    <MapPin size={19} strokeWidth={2} />
                     {r.mesas.zona}
                   </span>
                 )}
-                <span className="inline-flex items-center gap-1">
-                  <Users size={13} strokeWidth={1.75} />
+                <span className="inline-flex items-center gap-1.5">
+                  <Users size={19} strokeWidth={2} />
                   {r.num_personas}
                 </span>
               </div>
@@ -806,11 +807,11 @@ function PanelDetalle({
                   key={estado}
                   disabled={guardando}
                   onClick={() => onCambiarEstado(estado)}
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors disabled:cursor-wait disabled:opacity-60 ${
+                  className={`inline-flex items-center gap-2 rounded-full border-2 px-4 py-2.5 text-sm font-bold transition-colors disabled:cursor-wait disabled:opacity-60 ${
                     activo ? BOTON_ESTADO_ACTIVO[estado] : "border-line text-ink-muted hover:bg-surface-sunken"
                   }`}
                 >
-                  <Icono size={12} strokeWidth={2.25} />
+                  <Icono size={16} strokeWidth={2.5} />
                   {ETIQUETAS_ESTADO[estado]}
                 </button>
               );
