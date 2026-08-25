@@ -676,27 +676,21 @@ function PanelDetalle({
       ref={panelRef}
       className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto border-l border-line bg-surface shadow-popover sm:w-[420px]"
     >
-        {/* Barra superior: en móvil, flecha atrás grande + texto (patrón habitual de navegación móvil); en escritorio, cruz de cerrar */}
-        <div className="sticky top-0 z-10 flex items-center justify-between bg-espresso-950 px-2 py-2 sm:hidden">
+        {/* Móvil: flecha atrás + mesa unidas en una sola barra */}
+        <div className="sticky top-0 z-10 flex items-center gap-3 bg-espresso-950 px-2 py-2.5 sm:hidden">
           <button
             onClick={onCerrar}
             aria-label="Volver"
-            className="flex items-center gap-2 rounded-full px-3 py-2 text-white transition-colors hover:bg-white/10 active:bg-white/10"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 active:bg-white/10"
           >
-            <ArrowLeft size={32} strokeWidth={2.25} />
-            <span className="text-lg font-semibold">Volver</span>
+            <ArrowLeft size={30} strokeWidth={2.25} />
           </button>
-          {!editando && (
-            <button
-              onClick={() => setEditando(true)}
-              aria-label="Editar reserva"
-              className="flex h-11 w-11 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10"
-            >
-              <Pencil size={20} strokeWidth={1.75} />
-            </button>
-          )}
+          <p className="flex-1 truncate text-2xl font-extrabold uppercase leading-none tracking-wide text-white">
+            {mesaPrefijo || "Mesa"} {mesaNumero}
+          </p>
         </div>
 
+        {/* Escritorio: cruz de cerrar + editar arriba, banda de mesa aparte */}
         <div className="hidden items-center justify-end gap-1 p-3 sm:flex">
           {!editando && (
             <button
@@ -716,8 +710,8 @@ function PanelDetalle({
           </button>
         </div>
 
-        <div className="bg-brand px-5 py-5 text-white">
-          <p className="text-3xl font-extrabold uppercase leading-none tracking-wide sm:text-4xl">
+        <div className="hidden bg-brand px-5 py-5 text-white sm:block">
+          <p className="text-4xl font-extrabold uppercase leading-none tracking-wide">
             {mesaPrefijo || "Mesa"} {mesaNumero}
           </p>
         </div>
@@ -788,8 +782,21 @@ function PanelDetalle({
             </div>
           ) : (
             <>
-              <h2 className="text-xl font-semibold text-ink">{r.clientes?.nombre}</h2>
-              <div className="mt-1.5 flex flex-col gap-1.5 text-base text-ink-muted">
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="truncate text-xl font-semibold text-ink">{r.clientes?.nombre}</h2>
+                {!editando && (
+                  <button
+                    onClick={() => setEditando(true)}
+                    aria-label="Editar reserva"
+                    className="shrink-0 rounded-md p-1.5 text-ink-muted transition-colors hover:bg-surface-sunken hover:text-ink sm:hidden"
+                  >
+                    <Pencil size={18} strokeWidth={1.75} />
+                  </button>
+                )}
+              </div>
+
+              {/* Escritorio: teléfono y email como enlaces con texto */}
+              <div className="mt-1.5 hidden flex-col gap-1.5 text-base text-ink-muted sm:flex">
                 <a href={`tel:${r.clientes?.telefono}`} className="inline-flex items-center gap-2 hover:text-brand hover:underline">
                   <Phone size={16} strokeWidth={1.75} />
                   {r.clientes?.telefono}
@@ -799,6 +806,25 @@ function PanelDetalle({
                   {r.clientes?.email}
                 </a>
               </div>
+
+              {/* Móvil: llamar/email como iconos grandes, fáciles de pulsar */}
+              <div className="mt-3 flex items-center gap-3 sm:hidden">
+                <a
+                  href={`tel:${r.clientes?.telefono}`}
+                  aria-label={`Llamar a ${r.clientes?.nombre}`}
+                  className="flex h-14 w-14 items-center justify-center rounded-full bg-brand text-white transition-colors hover:bg-brand-dark active:bg-brand-dark"
+                >
+                  <Phone size={26} strokeWidth={2} />
+                </a>
+                <a
+                  href={`mailto:${r.clientes?.email}`}
+                  aria-label={`Enviar email a ${r.clientes?.nombre}`}
+                  className="flex h-14 w-14 items-center justify-center rounded-full bg-surface-sunken text-ink transition-colors hover:bg-line active:bg-line"
+                >
+                  <Mail size={26} strokeWidth={2} />
+                </a>
+              </div>
+
               <div className="mt-3 flex flex-wrap items-center gap-4 text-lg font-bold text-brand">
                 {r.mesas?.zona && (
                   <span className="inline-flex items-center gap-1.5">
@@ -808,7 +834,7 @@ function PanelDetalle({
                 )}
                 <span className="inline-flex items-center gap-1.5">
                   <Users size={19} strokeWidth={2} />
-                  {r.num_personas}
+                  {r.num_personas} PAX
                 </span>
               </div>
             </>
@@ -816,13 +842,27 @@ function PanelDetalle({
         </div>
 
         <div className="mx-5 mt-5 border-t border-line pt-4">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-faint">Reserva</h3>
-          <div className="mt-2 space-y-1">
-            <p className="text-lg font-bold text-ink">{formatearFecha(r.fecha)}</p>
-            <p className="text-lg font-bold text-ink">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-faint sm:hidden">Reserva</h3>
+          {/* Móvil: hora grande y centrada, día y fecha pequeños debajo */}
+          <div className="text-center sm:hidden">
+            <p className="mt-1 text-3xl font-extrabold text-ink">
               {r.hora_inicio.slice(0, 5)}–{r.hora_fin.slice(0, 5)}
             </p>
-            {r.servicio && <p className="text-lg font-bold text-ink">{ETIQUETA_SERVICIO[r.servicio] || r.servicio}</p>}
+            <p className="mt-1 text-sm text-ink-muted">
+              {formatearFecha(r.fecha)}
+              {r.servicio && ` · ${ETIQUETA_SERVICIO[r.servicio] || r.servicio}`}
+            </p>
+          </div>
+          {/* Escritorio: bloque original */}
+          <div className="hidden sm:block">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-faint">Reserva</h3>
+            <div className="mt-2 space-y-1">
+              <p className="text-lg font-bold text-ink">{formatearFecha(r.fecha)}</p>
+              <p className="text-lg font-bold text-ink">
+                {r.hora_inicio.slice(0, 5)}–{r.hora_fin.slice(0, 5)}
+              </p>
+              {r.servicio && <p className="text-lg font-bold text-ink">{ETIQUETA_SERVICIO[r.servicio] || r.servicio}</p>}
+            </div>
           </div>
         </div>
 
