@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { CalendarCheck, LayoutGrid, Clock, CalendarRange, Map, Rows3, Menu, X } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { CalendarCheck, LayoutGrid, Clock, CalendarRange, Map, Rows3, Menu, X, LogOut } from "lucide-react";
+import { crearClienteNavegador } from "@/lib/supabase/client";
 
 const NAV = [
   { href: "/admin", label: "Reservas", icon: CalendarCheck },
@@ -20,6 +21,17 @@ function esActivo(pathname: string, href: string) {
 }
 
 function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate?: () => void }) {
+  const router = useRouter();
+  const [saliendo, setSaliendo] = useState(false);
+
+  async function handleLogout() {
+    setSaliendo(true);
+    const supabase = crearClienteNavegador();
+    await supabase.auth.signOut();
+    router.push("/");
+    router.refresh();
+  }
+
   return (
     <div className="flex h-full flex-col">
       <div className="px-6 py-7">
@@ -54,6 +66,17 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
         })}
       </nav>
 
+      <div className="border-t border-white/10 px-3 py-3">
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={saliendo}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[0.925rem] text-white/60 transition-colors hover:bg-white/5 hover:text-white/90 disabled:opacity-60"
+        >
+          <LogOut size={18} strokeWidth={1.75} className="shrink-0" />
+          {saliendo ? "Saliendo..." : "Cerrar sesión"}
+        </button>
+      </div>
       <div className="border-t border-white/10 px-6 py-4">
         <p className="text-xs text-white/40">Bodega La Mazaroca &copy; {new Date().getFullYear()}</p>
       </div>
