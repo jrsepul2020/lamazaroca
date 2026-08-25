@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Monitor, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
+import { RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 
 type Mesa = { id: string; nombre: string; zona: string | null; capacidad_min: number; capacidad_max: number };
 
@@ -91,115 +91,104 @@ export default function PlanoPage() {
 
   return (
     <div>
-      {/* Aviso solo-móvil */}
-      <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-line py-20 text-center lg:hidden">
-        <Monitor size={28} strokeWidth={1.5} className="text-ink-faint" />
-        <p className="max-w-xs text-sm text-ink-muted">
-          El plano de mesas está pensado para pantallas grandes. Ábrelo desde un ordenador de escritorio.
-        </p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+        <div>
+          <h1 className="font-serif text-2xl text-ink sm:text-3xl">Plano de mesas</h1>
+          <p className="mt-1 text-sm text-ink-muted">
+            Referencia visual, no editable
+            {esHoy && ` · actualizado a las ${ahora.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}`}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="inline-flex items-center gap-1">
+            <button
+              onClick={() => setFecha((f) => sumarDias(f, -1))}
+              aria-label="Día anterior"
+              className="rounded-md p-1.5 text-ink-muted transition-colors hover:bg-surface-sunken hover:text-ink"
+            >
+              <ChevronLeft size={18} strokeWidth={1.75} />
+            </button>
+            <span className="min-w-[10rem] text-center text-sm font-medium capitalize text-ink sm:min-w-[13rem]">
+              {formatearFecha(fecha)}
+            </span>
+            <button
+              onClick={() => setFecha((f) => sumarDias(f, 1))}
+              aria-label="Día siguiente"
+              className="rounded-md p-1.5 text-ink-muted transition-colors hover:bg-surface-sunken hover:text-ink"
+            >
+              <ChevronRight size={18} strokeWidth={1.75} />
+            </button>
+            {!esHoy && (
+              <button
+                onClick={() => setFecha(hoyISO)}
+                className="ml-1 rounded-md border border-line px-2.5 py-1 text-xs font-medium text-ink-muted transition-colors hover:bg-surface-sunken"
+              >
+                Hoy
+              </button>
+            )}
+          </div>
+          <button
+            onClick={cargar}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-line px-3 py-1.5 text-sm font-medium text-ink-muted transition-colors hover:bg-surface-sunken"
+          >
+            <RefreshCw size={14} strokeWidth={1.75} />
+            <span className="hidden sm:inline">Actualizar</span>
+          </button>
+        </div>
       </div>
 
-      {/* Contenido a pantalla completa, solo escritorio */}
-      <div className="hidden lg:block">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h1 className="font-serif text-3xl text-ink">Plano de mesas</h1>
-            <p className="mt-1 text-sm text-ink-muted">
-              Referencia visual, no editable
-              {esHoy && ` · actualizado a las ${ahora.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}`}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="inline-flex items-center gap-1">
-              <button
-                onClick={() => setFecha((f) => sumarDias(f, -1))}
-                aria-label="Día anterior"
-                className="rounded-md p-1.5 text-ink-muted transition-colors hover:bg-surface-sunken hover:text-ink"
-              >
-                <ChevronLeft size={18} strokeWidth={1.75} />
-              </button>
-              <span className="min-w-[13rem] text-center text-sm font-medium capitalize text-ink">
-                {formatearFecha(fecha)}
-              </span>
-              <button
-                onClick={() => setFecha((f) => sumarDias(f, 1))}
-                aria-label="Día siguiente"
-                className="rounded-md p-1.5 text-ink-muted transition-colors hover:bg-surface-sunken hover:text-ink"
-              >
-                <ChevronRight size={18} strokeWidth={1.75} />
-              </button>
-              {!esHoy && (
-                <button
-                  onClick={() => setFecha(hoyISO)}
-                  className="ml-1 rounded-md border border-line px-2.5 py-1 text-xs font-medium text-ink-muted transition-colors hover:bg-surface-sunken"
-                >
-                  Hoy
-                </button>
-              )}
-            </div>
-            <button
-              onClick={cargar}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-line px-3 py-1.5 text-sm font-medium text-ink-muted transition-colors hover:bg-surface-sunken"
-            >
-              <RefreshCw size={14} strokeWidth={1.75} />
-              Actualizar
-            </button>
-          </div>
-        </div>
-
-        <div className="mt-4 flex flex-wrap gap-4 text-xs text-ink-muted">
-          {esHoy ? (
-            <>
-              <span className="inline-flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-brand-dark" /> Ocupada ahora
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full border border-brand bg-brand-tint" /> Reservada más tarde hoy
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full border border-line-strong bg-surface-sunken" /> Libre
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="inline-flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full border border-brand bg-brand-tint" /> Con reserva ese día
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full border border-line-strong bg-surface-sunken" /> Libre
-              </span>
-            </>
-          )}
-        </div>
-
-        {cargando ? (
-          <div className="mt-6 grid grid-cols-2 gap-6 2xl:grid-cols-3">
-            {[0, 1, 2, 3].map((i) => (
-              <div key={i} className="h-40 animate-pulse rounded-xl bg-surface-sunken" />
-            ))}
-          </div>
+      <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-ink-muted">
+        {esHoy ? (
+          <>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-brand-dark" /> Ocupada ahora
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 shrink-0 rounded-full border border-brand bg-brand-tint" /> Reservada más tarde hoy
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 shrink-0 rounded-full border border-line-strong bg-surface-sunken" /> Libre
+            </span>
+          </>
         ) : (
-          <div className="mt-6 grid grid-cols-2 gap-6 2xl:grid-cols-3">
-            {zonas.map(([zona, listaMesas]) => (
-              <div key={zona} className="rounded-xl border border-line bg-surface p-5 shadow-card">
-                <h2 className="font-serif text-2xl text-ink">{zona}</h2>
-                <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-3">
-                  {listaMesas.map((m) => (
-                    <CajaMesa
-                      key={m.id}
-                      mesa={m}
-                      reservasDia={porMesa.get(m.id) || []}
-                      horaActual={horaActual}
-                      esHoy={esHoy}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+          <>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 shrink-0 rounded-full border border-brand bg-brand-tint" /> Con reserva ese día
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 shrink-0 rounded-full border border-line-strong bg-surface-sunken" /> Libre
+            </span>
+          </>
         )}
       </div>
+
+      {cargando ? (
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 2xl:grid-cols-3">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="h-40 animate-pulse rounded-xl bg-surface-sunken" />
+          ))}
+        </div>
+      ) : (
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 2xl:grid-cols-3">
+          {zonas.map(([zona, listaMesas]) => (
+            <div key={zona} className="rounded-xl border border-line bg-surface p-4 shadow-card sm:p-5">
+              <h2 className="font-serif text-xl text-ink sm:text-2xl">{zona}</h2>
+              <div className="mt-3 grid grid-cols-[repeat(auto-fill,minmax(105px,1fr))] gap-2.5 sm:mt-4 sm:grid-cols-[repeat(auto-fill,minmax(130px,1fr))] sm:gap-3">
+                {listaMesas.map((m) => (
+                  <CajaMesa
+                    key={m.id}
+                    mesa={m}
+                    reservasDia={porMesa.get(m.id) || []}
+                    horaActual={horaActual}
+                    esHoy={esHoy}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
