@@ -77,7 +77,7 @@ export default function LoginPage() {
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url(/img/lamazaroca.jpeg)" }}
       />
-      <div className="absolute inset-0 bg-espresso-950/80" />
+      <div className="absolute inset-0 bg-espresso-950/40" />
 
       <div className="relative w-full max-w-sm">
         <div className="overflow-hidden rounded-xl border border-line bg-surface shadow-popover">
