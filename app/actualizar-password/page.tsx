@@ -59,7 +59,7 @@ export default function ActualizarPasswordPage() {
         <div className="overflow-hidden rounded-xl border border-line bg-surface shadow-popover">
           <div className="bg-brand text-center">
             <img src="/img/logomazaroca1.jpg" alt="Bodega La Mazaroca" className="block w-full h-auto" />
-            <p className="px-6 pb-5 pt-3 text-sm uppercase tracking-wider text-white/70">Panel de reservas</p>
+            <p className="px-6 pb-5 pt-3 text-base font-bold uppercase tracking-wider text-white/80">Panel de reservas</p>
           </div>
 
           <div className="p-6">
