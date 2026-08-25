@@ -91,6 +91,16 @@ const TEXTO_ESTADO: Record<string, string> = {
   lista_espera: "text-state-waitlist",
 };
 
+const FONDO_ESTADO: Record<string, string> = {
+  pendiente_confirmacion: "bg-state-pending-bg",
+  confirmada: "bg-state-confirmed-bg",
+  sentada: "bg-state-seated-bg",
+  completada: "bg-state-done-bg",
+  no_show: "bg-state-noshow-bg",
+  cancelada: "bg-state-cancelled-bg",
+  lista_espera: "bg-state-waitlist-bg",
+};
+
 const HOVER_FONDO_ESTADO: Record<string, string> = {
   pendiente_confirmacion: "hover:bg-state-pending-bg",
   confirmada: "hover:bg-state-confirmed-bg",
@@ -415,18 +425,18 @@ export default function BetaPage() {
                                 setSeleccionId((prev) => (prev === r.id ? null : r.id));
                               }
                             }}
-                            className={`group flex w-full cursor-pointer items-center gap-1.5 px-3 py-3.5 text-left transition-colors hover:bg-state-noshow lg:gap-3 lg:px-4 lg:py-4 ${
-                              seleccionId === r.id ? "bg-brand-tint" : ""
-                            }`}
+                            className={`group flex w-full cursor-pointer items-center gap-1.5 border-l-4 px-3 py-3.5 text-left transition-colors hover:brightness-[0.97] lg:gap-3 lg:px-4 lg:py-4 ${
+                              FONDO_ESTADO[r.estado] || "bg-surface"
+                            } ${seleccionId === r.id ? "border-brand" : "border-transparent"}`}
                           >
                             {/* Estado: primero de la fila, pulsable para cambiarlo sin abrir el panel */}
                             <div className="relative shrink-0" onClick={(e) => e.stopPropagation()}>
                               <button
                                 onClick={(e) => alternarMenuEstado(r.id, e.currentTarget)}
                                 title={`Estado: ${ETIQUETAS_ESTADO[r.estado] || r.estado} — pulsa para cambiarlo`}
-                                className={`flex items-center gap-2 rounded-lg p-1.5 transition-colors group-hover:hover:bg-white/20 lg:w-[150px] lg:px-2 lg:py-2 ${
-                                  HOVER_FONDO_ESTADO[r.estado] || "hover:bg-surface-sunken"
-                                } ${TEXTO_ESTADO[r.estado] || "text-ink-muted"} group-hover:text-white`}
+                                className={`flex items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-white/60 lg:w-[150px] lg:px-2 lg:py-2 ${
+                                  TEXTO_ESTADO[r.estado] || "text-ink-muted"
+                                }`}
                               >
                                 <IconoEstado size={26} strokeWidth={2} className="shrink-0" />
                                 <span className="hidden truncate text-base font-semibold lg:inline">
@@ -440,10 +450,10 @@ export default function BetaPage() {
                               <span className="shrink-0 rounded-md bg-espresso-900 px-1.5 py-1 tabular-nums text-sm font-bold text-white">
                                 {r.hora_inicio.slice(0, 5)}
                               </span>
-                              <span className="flex-1 truncate text-base font-semibold text-ink group-hover:text-white">
+                              <span className="flex-1 truncate text-base font-semibold text-ink">
                                 {r.clientes?.nombre}
                               </span>
-                              <span className="inline-flex shrink-0 items-center gap-0.5 text-sm text-ink-muted group-hover:text-white/85">
+                              <span className="inline-flex shrink-0 items-center gap-0.5 text-sm text-ink-muted">
                                 <Users size={15} strokeWidth={1.75} />
                                 {r.num_personas}
                               </span>
@@ -454,19 +464,14 @@ export default function BetaPage() {
                               <span className="w-fit shrink-0 rounded-md bg-espresso-900 px-2.5 py-1 tabular-nums text-lg font-bold text-white">
                                 {r.hora_inicio.slice(0, 5)}
                               </span>
-                              <span className="truncate pr-3 text-xl font-bold text-ink group-hover:text-white">
-                                {r.clientes?.nombre}
+                              <span className="truncate pr-3 text-xl font-bold text-ink">{r.clientes?.nombre}</span>
+                              <span className="text-lg text-ink-muted">
+                                <span className="text-ink-faint">| </span>
+                                Personas: <span className="font-semibold text-ink">{r.num_personas}</span>
                               </span>
-                              <span className="text-lg text-ink-muted group-hover:text-white/85">
-                                <span className="text-ink-faint group-hover:text-white/50">| </span>
-                                Personas:{" "}
-                                <span className="font-semibold text-ink group-hover:text-white">{r.num_personas}</span>
-                              </span>
-                              <span className="truncate pr-3 text-lg text-ink-muted group-hover:text-white/85">
-                                <span className="text-ink-faint group-hover:text-white/50">| </span>
-                                <span className="font-semibold text-ink group-hover:text-white">
-                                  {r.mesas?.nombre || "Sin asignar"}
-                                </span>
+                              <span className="truncate pr-3 text-lg text-ink-muted">
+                                <span className="text-ink-faint">| </span>
+                                <span className="font-semibold text-ink">{r.mesas?.nombre || "Sin asignar"}</span>
                               </span>
                             </div>
 
@@ -478,21 +483,21 @@ export default function BetaPage() {
                               <a
                                 href={`tel:${r.clientes?.telefono}`}
                                 title="Llamar"
-                                className="hidden h-10 w-10 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-ink/5 hover:text-brand group-hover:text-white/90 group-hover:hover:bg-white/20 group-hover:hover:text-white sm:flex"
+                                className="hidden h-10 w-10 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-white/60 hover:text-brand sm:flex"
                               >
                                 <Phone size={20} strokeWidth={1.75} />
                               </a>
                               <a
                                 href={`mailto:${r.clientes?.email}`}
                                 title="Enviar email"
-                                className="hidden h-10 w-10 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-ink/5 hover:text-brand group-hover:text-white/90 group-hover:hover:bg-white/20 group-hover:hover:text-white sm:flex"
+                                className="hidden h-10 w-10 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-white/60 hover:text-brand sm:flex"
                               >
                                 <Mail size={20} strokeWidth={1.75} />
                               </a>
                               <button
                                 onClick={() => eliminarReserva(r.id, r.clientes?.nombre)}
                                 title="Eliminar reserva"
-                                className="flex h-9 w-9 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-ink/5 hover:text-state-noshow group-hover:text-white/90 group-hover:hover:bg-white/20 group-hover:hover:text-white lg:h-10 lg:w-10"
+                                className="flex h-9 w-9 items-center justify-center rounded-lg text-ink-muted transition-colors hover:bg-white/60 hover:text-state-noshow lg:h-10 lg:w-10"
                               >
                                 <Trash2 size={20} strokeWidth={1.75} />
                               </button>
