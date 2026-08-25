@@ -445,18 +445,21 @@ export default function BetaPage() {
                               </button>
                             </div>
 
-                            {/* Móvil / tablet: compacto pero con fuentes grandes */}
-                            <div className="flex min-w-0 flex-1 items-center gap-2 lg:hidden">
-                              <span className="shrink-0 rounded-md bg-espresso-900 px-1.5 py-1 tabular-nums text-sm font-bold text-white">
-                                {r.hora_inicio.slice(0, 5)}
-                              </span>
-                              <span className="flex-1 truncate text-base font-semibold text-ink">
-                                {r.clientes?.nombre}
-                              </span>
-                              <span className="inline-flex shrink-0 items-center gap-0.5 text-sm text-ink-muted">
-                                <Users size={15} strokeWidth={1.75} />
-                                {r.num_personas}
-                              </span>
+                            {/* Móvil / tablet: mesa + personas arriba (cortas, no compiten por ancho); nombre a línea completa con la hora debajo */}
+                            <div className="flex min-w-0 flex-1 flex-col gap-1 lg:hidden">
+                              <div className="flex items-center gap-2">
+                                <span className="shrink-0 rounded-md bg-espresso-900 px-1.5 py-1 text-xs font-bold uppercase tracking-wide text-white">
+                                  {r.mesas?.nombre || "Sin mesa"}
+                                </span>
+                                <span className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-full bg-brand px-2 py-0.5 text-sm font-bold text-white">
+                                  <Users size={14} strokeWidth={2.5} />
+                                  {r.num_personas}
+                                </span>
+                              </div>
+                              <div>
+                                <p className="truncate text-base font-semibold text-ink">{r.clientes?.nombre}</p>
+                                <p className="text-xs font-medium text-ink-muted">{r.hora_inicio.slice(0, 5)}</p>
+                              </div>
                             </div>
 
                             {/* Escritorio: columnas de ancho fijo, siempre justificadas a la izquierda */}
