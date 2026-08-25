@@ -522,30 +522,48 @@ export default function BetaPage() {
             <>
               <div className="fixed inset-0 z-30" onClick={() => setMenuEstadoId(null)} aria-hidden="true" />
               <div
-                style={{ position: "fixed", left: menuEstadoPos.left, top: menuEstadoPos.top, bottom: menuEstadoPos.bottom }}
-                className="z-40 w-56 rounded-lg border border-line bg-surface p-1.5 shadow-popover"
+                style={{
+                  position: "fixed",
+                  left: menuEstadoPos.left,
+                  top: menuEstadoPos.top,
+                  bottom: menuEstadoPos.bottom,
+                  transformOrigin: menuEstadoPos.top ? "top left" : "bottom left",
+                  ["--pop-y" as string]: menuEstadoPos.top ? "-6px" : "6px",
+                }}
+                className="animate-menu-pop z-40 w-60 overflow-hidden rounded-xl border border-line/60 bg-surface/90 shadow-popover backdrop-blur-md"
               >
-                {ESTADOS.map((estado) => {
-                  const Icono = ICONO_ESTADO[estado];
-                  const activo = reservaMenu.estado === estado;
-                  return (
-                    <button
-                      key={estado}
-                      disabled={guardando}
-                      onClick={() => {
-                        setMenuEstadoId(null);
-                        cambiarEstadoPorId(reservaMenu.id, estado);
-                      }}
-                      className={`flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-sm font-medium transition-colors disabled:cursor-wait ${
-                        activo ? "bg-surface-sunken text-ink" : "text-ink-muted hover:bg-surface-sunken hover:text-ink"
-                      }`}
-                    >
-                      <Icono size={18} strokeWidth={2} className={TEXTO_ESTADO[estado] || "text-ink-muted"} />
-                      {ETIQUETAS_ESTADO[estado]}
-                      {activo && <Check size={14} strokeWidth={2.5} className="ml-auto text-ink-faint" />}
-                    </button>
-                  );
-                })}
+                <p className="px-3.5 pb-1.5 pt-3 text-[0.7rem] font-semibold uppercase tracking-wide text-ink-faint">
+                  Cambiar estado
+                </p>
+                <div className="p-1.5 pt-0.5">
+                  {ESTADOS.map((estado) => {
+                    const Icono = ICONO_ESTADO[estado];
+                    const activo = reservaMenu.estado === estado;
+                    return (
+                      <button
+                        key={estado}
+                        disabled={guardando}
+                        onClick={() => {
+                          setMenuEstadoId(null);
+                          cambiarEstadoPorId(reservaMenu.id, estado);
+                        }}
+                        className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm font-medium transition-colors disabled:cursor-wait ${
+                          activo ? FONDO_ESTADO[estado] || "bg-surface-sunken" : "hover:bg-surface-sunken"
+                        } ${activo ? "text-ink" : "text-ink-muted hover:text-ink"}`}
+                      >
+                        <span
+                          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
+                            FONDO_ESTADO[estado] || "bg-surface-sunken"
+                          }`}
+                        >
+                          <Icono size={15} strokeWidth={2.25} className={TEXTO_ESTADO[estado] || "text-ink-muted"} />
+                        </span>
+                        {ETIQUETAS_ESTADO[estado]}
+                        {activo && <Check size={15} strokeWidth={2.5} className="ml-auto text-brand" />}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </>,
             document.body
