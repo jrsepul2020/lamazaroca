@@ -155,6 +155,7 @@ export default function BetaPage() {
   const [fecha, setFecha] = useState(() => aISO(new Date()));
   const [vista, setVista] = useState<"dia" | "semana">("dia");
   const [seleccionId, setSeleccionId] = useState<string | null>(null);
+  const seleccionAlPulsarRef = useRef<string | null>(null);
   const [guardando, setGuardando] = useState(false);
   const [menuEstadoId, setMenuEstadoId] = useState<string | null>(null);
   const [menuEstadoPos, setMenuEstadoPos] = useState<{ left: number; top?: number; bottom?: number } | null>(null);
@@ -404,7 +405,10 @@ export default function BetaPage() {
                             key={r.id}
                             role="button"
                             tabIndex={0}
-                            onClick={() => setSeleccionId((prev) => (prev === r.id ? null : r.id))}
+                            onMouseDown={() => {
+                              seleccionAlPulsarRef.current = seleccionId;
+                            }}
+                            onClick={() => setSeleccionId(seleccionAlPulsarRef.current === r.id ? null : r.id)}
                             onKeyDown={(e) => {
                               if (e.key === "Enter" || e.key === " ") {
                                 e.preventDefault();
